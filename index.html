@@ -196,13 +196,13 @@ main { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-temp
 #note { font-size: calc(var(--u) * .24); color: var(--muted); text-align: center; }
 #result {
   position: absolute; inset: 0; z-index: 3; background: var(--surface); display: none;
-  flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * .2); padding: calc(var(--u) * .2);
+  flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * .12); padding: calc(var(--u) * .16) calc(var(--u) * .2);
 }
 #result.show { display: flex; }
-#result h2 { font-size: calc(var(--u) * .5); color: var(--heading); text-align: center; }
+#result h2 { font-size: calc(var(--u) * .44); color: var(--heading); text-align: center; }
 .rstats { display: flex; gap: calc(var(--u) * .3); }
 .rstat { display: flex; flex-direction: column; align-items: center; min-width: calc(var(--u) * 1.9); padding: calc(var(--u) * .12) calc(var(--u) * .2); background: var(--surface-2); border: 1px solid var(--border); border-radius: calc(var(--u) * .24); }
-.rstat b { font-size: calc(var(--u) * .62); color: var(--heading); font-variant-numeric: tabular-nums; }
+.rstat b { font-size: calc(var(--u) * .5); color: var(--heading); font-variant-numeric: tabular-nums; }
 .rstat span { font-size: calc(var(--u) * .2); color: var(--muted); }
 .rstat.good b { color: var(--ok); } .rstat.low b { color: var(--bad); }
 #r-sub { font-size: calc(var(--u) * .25); color: var(--text); min-height: 1.3em; text-align: center; }
@@ -214,7 +214,39 @@ main { grid-row: 2; grid-column: 1; }
 #kb { grid-row: 3; }
 #map { grid-row: 2; grid-column: 1; display: none; flex-direction: column; gap: calc(var(--u) * .1); min-height: 0; }
 body.map-mode #map { display: flex; }
-body.map-mode main, body.map-mode #kb { display: none; }
+body.map-mode main, body.map-mode #kb, body.home-mode main, body.home-mode #kb { display: none; }
+
+/* ---------- Thanh tiến độ buổi tập ---------- */
+#top { display: flex; flex-direction: column; gap: calc(var(--u) * .1); }
+#sbar { display: none; align-items: center; gap: calc(var(--u) * .24); }
+body.in-sess #sbar { display: flex; }
+#sb-name { flex: none; min-width: calc(var(--u) * 3.1); font-size: calc(var(--u) * .24); font-weight: 800; color: var(--heading); white-space: nowrap; }
+#sb-name small { font-size: .8em; font-weight: 700; color: var(--muted); margin-left: .5em; }
+#sb-segs { flex: 1; display: flex; gap: calc(var(--u) * .07); }
+.seg { flex: var(--s) 1 0; height: calc(var(--u) * .2); border-radius: 999px; background: var(--surface); border: 1px solid var(--border); overflow: hidden; position: relative; }
+.seg i { position: absolute; inset: 0 auto 0 0; width: var(--p, 0%); background: linear-gradient(100deg, var(--gold-1) 5%, var(--gold-2) 45%, var(--gold-3) 85%); }
+.seg.cur { border-color: var(--pur-3); }
+#sb-time { flex: none; min-width: calc(var(--u) * 2.9); text-align: right; font-size: calc(var(--u) * .24); font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+#sb-time.paused { color: var(--purple); font-weight: 800; }
+
+/* ---------- Trang chủ và tổng kết buổi ---------- */
+#home { grid-row: 2; grid-column: 1; display: none; text-align: center; }
+body.home-mode #home { display: flex; }
+body.home-mode .chip.ok, body.home-mode .chip.bad, body.home-mode .chip.acc { display: none; }
+#home h2 { font-size: calc(var(--u) * .5); color: var(--heading); }
+.elo-big { display: flex; align-items: baseline; gap: .45em; justify-content: center; }
+.elo-big span { font-size: calc(var(--u) * .24); color: var(--muted); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.elo-big b { font-size: calc(var(--u) * 1.05); line-height: 1; color: var(--heading); font-variant-numeric: tabular-nums; }
+.up { color: var(--ok); } .down { color: var(--bad); }
+.elo-big em, .chip small { font-style: normal; font-weight: 800; }
+.elo-big em { font-size: calc(var(--u) * .32); }
+.chip small { font-size: .9em; }
+#home .btn-big { font-size: calc(var(--u) * .46); padding: calc(var(--u) * .24) calc(var(--u) * .8); }
+#home .btn-big:disabled { opacity: .6; cursor: default; }
+.htext { font-size: calc(var(--u) * .24); color: var(--text); max-width: 90%; }
+.htext.muted { color: var(--muted); }
+#r-pts { font-size: calc(var(--u) * .32); font-weight: 800; min-height: 1.2em; }
+#r-pts small { font-size: .7em; font-weight: 700; color: var(--muted); margin-left: .6em; }
 .stage {
   flex: 1; min-height: 0; display: flex; align-items: center; gap: calc(var(--u) * .24); padding: 0 calc(var(--u) * .28);
   background: var(--surface); border: 1px solid var(--border); border-radius: calc(var(--u) * .26); box-shadow: var(--shadow);
@@ -245,6 +277,7 @@ body.map-mode main, body.map-mode #kb { display: none; }
 </head>
 <body>
 
+<div id="top">
 <header>
   <div class="logo gold">F</div>
   <h1>Phím Vàng<small>Tập gõ 10 ngón</small></h1>
@@ -252,9 +285,16 @@ body.map-mode main, body.map-mode #kb { display: none; }
   <div class="chip ok">Đúng <b id="s-ok">0</b></div>
   <div class="chip bad">Sai <b id="s-bad">0</b></div>
   <div class="chip acc">Chính xác <b id="s-acc">--</b></div>
+  <div class="chip elo" id="chip-elo" title="Điểm và mức thay đổi hôm nay">Điểm <b id="s-elo">800</b><small id="s-elod"></small></div>
   <button class="btn purple" id="btn-map" type="button">Lộ trình</button>
   <button class="btn gold" id="fs" type="button">Toàn màn hình</button>
 </header>
+<div id="sbar" aria-label="Buổi tập hôm nay">
+  <div id="sb-name"></div>
+  <div id="sb-segs"></div>
+  <div id="sb-time"></div>
+</div>
+</div>
 
 <main>
   <div class="hand" id="hand-l"></div>
@@ -273,6 +313,7 @@ body.map-mode main, body.map-mode #kb { display: none; }
         <div class="rstat"><b id="r-bad">0</b><span>Số lỗi</span></div>
         <div class="rstat"><b id="r-need">90%</b><span>Cần đạt</span></div>
       </div>
+      <div id="r-pts"></div>
       <div id="r-sub"></div>
       <div class="rbtns" id="r-btns"></div>
     </div>
@@ -280,6 +321,7 @@ body.map-mode main, body.map-mode #kb { display: none; }
   <div class="hand" id="hand-r"></div>
 </main>
 
+<section id="home" class="card" aria-label="Trang chủ"></section>
 <section id="map" aria-label="Lộ trình"></section>
 
 <div id="kb" aria-hidden="true"></div>
@@ -287,6 +329,7 @@ body.map-mode main, body.map-mode #kb { display: none; }
 <div id="rotate"><div>&#x1F4F1;</div>Xoay ngang máy tính bảng để bắt đầu nhé!</div>
 
 <script src="lessons.js"></script>
+<script src="rating.js"></script>
 <script>
 'use strict';
 
@@ -364,17 +407,34 @@ drawHand('l'); drawHand('r');
 
 /* ---------- Bài học: trạng thái, lưu tiến độ ---------- */
 const SAVE_KEY = 'phimvang.progress';   // một khóa duy nhất cho mọi dữ liệu; bước sau mở rộng thêm trường
-const SAVE_VER = 1;                     // tăng khi đổi cấu trúc dữ liệu lưu hoặc id/thứ tự bài
-// Dạng lưu: { v: 1, passed: { '1-1': { best: 96, tries: 2 } }, last: '1-2' }
+const SAVE_VER = 2;                     // tăng khi đổi cấu trúc dữ liệu lưu hoặc id/thứ tự bài (tăng là xóa tiến độ cũ, trừ bản có hàm chuyển)
+/* Dạng lưu v2:
+   { v: 2, passed: { '1-1': { best: 96, tries: 2 } }, last: '1-2',
+     rating: 812, ratedCount: 14,
+     days: { '2026-11-16': { start, end, gained, lost, seconds, lessons, ok, bad, done,
+                             part, partSec, lastNew, opened: ['1-3'] } } }
+   Ngày theo giờ máy. part/partSec/lastNew dùng để mở lại giữa buổi; opened = bài mới qua lần đầu trong buổi. */
+const R = RATING.CFG;
+function freshSave() { return { v: SAVE_VER, passed: {}, last: null, rating: R.START, ratedCount: 0, days: {} }; }
+let migrated = false;
 function loadSave() {
   try {
     const o = JSON.parse(localStorage.getItem(SAVE_KEY));
-    if (o && o.v === SAVE_VER && o.passed && typeof o.passed === 'object') return o;
+    if (o && typeof o === 'object' && o.passed && typeof o.passed === 'object') {
+      if (o.v === 1) { o.v = 2; migrated = true; }          // v1 -> v2: giữ nguyên bài đã qua, thêm điểm và ngày
+      if (o.v === SAVE_VER) {
+        o.rating = Number.isFinite(o.rating) ? Math.max(R.MIN, Math.round(o.rating)) : R.START;
+        o.ratedCount = Number.isFinite(o.ratedCount) && o.ratedCount > 0 ? Math.floor(o.ratedCount) : 0;
+        if (!o.days || typeof o.days !== 'object' || Array.isArray(o.days)) o.days = {};
+        return o;
+      }
+    }
   } catch (_) {}
-  return { v: SAVE_VER, passed: {}, last: null };
+  return freshSave();
 }
 function writeSave() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (_) {} }
 const save = loadSave();
+if (migrated) writeSave();
 const LESSONS = PV.lessons;
 const isPassed = id => !!save.passed[id];
 const isOpen = i => i === 0 || isPassed(LESSONS[i - 1].id);
@@ -390,21 +450,32 @@ const toastEl = document.getElementById('toast');
 const resultEl = document.getElementById('result');
 const mapEl = document.getElementById('map');
 const PRAISE = ['Giỏi lắm!', 'Tuyệt vời!', 'Chuẩn luôn!', 'Quá đỉnh!'];
-let mode = 'lesson';   // 'lesson' | 'result' | 'map'
-const st = { idx: 0, lines: [], line: 0, pos: 0, ok: 0, bad: 0 };
+let mode = 'home';   // 'home' | 'lesson' | 'result' | 'map'
+// ctx: 'free' = tập tự do hoặc luyện thêm (không đổi điểm); 'session' = trong buổi tập hôm nay (có tính điểm)
+const st = { idx: 0, lines: [], line: 0, pos: 0, ok: 0, bad: 0, times: [], ctx: 'free' };
 const curText = () => st.lines[st.line].text;
 
 function setMode(m) {
   mode = m;
-  document.body.classList.toggle('map-mode', m === 'map');
+  const body = document.body;
+  body.classList.toggle('map-mode', m === 'map');
+  body.classList.toggle('home-mode', m === 'home');
+  body.classList.toggle('in-sess', st.ctx === 'session' && sess && (m === 'lesson' || m === 'result'));
   resultEl.classList.toggle('show', m === 'result');
-  document.getElementById('btn-map').textContent = m === 'map' ? 'Vào bài' : 'Lộ trình';
+  updateMapBtn();
+}
+function updateMapBtn() {
+  const inSess = document.body.classList.contains('in-sess');
+  document.getElementById('btn-map').textContent = mode === 'map' ? 'Trang chủ' : inSess ? 'Thoát buổi' : 'Lộ trình';
 }
 
-function startLesson(idx) {
+function startLesson(idx, opt) {
+  const o = opt || {};
   const L = LESSONS[idx];
-  st.idx = idx; st.lines = PV.genLines(L); st.line = 0; st.ok = 0; st.bad = 0;
+  st.ctx = o.ctx || 'free';
+  st.idx = idx; st.lines = PV.genLines(L, o.lines || PV.CFG.LINES_PER_LESSON); st.line = 0; st.ok = 0; st.bad = 0; st.times = [];
   save.last = L.id; writeSave();
+  lastKeyAt = performance.now();      // bài mới bắt đầu thì đồng hồ buổi chạy ngay
   setMode('lesson');
   stats();
   loadLine();
@@ -469,6 +540,7 @@ function flash(el, cls, ms) {
 
 function typeChar(ch, code) {
   if (mode !== 'lesson') return;
+  st.times.push(performance.now());
   const want = curText()[st.pos];
   if (ch === want) {
     st.ok++; st.pos++;
@@ -494,23 +566,52 @@ function finishLesson() {
   const rec = save.passed[L.id];
   if (pass) save.passed[L.id] = { best: Math.max(acc, rec ? rec.best : 0), tries: (rec ? rec.tries : 0) + 1 };
   else if (rec) rec.tries++;
+  // Trong buổi tập: chấm điểm, cộng dồn số liệu của ngày, rồi ghi ngay để tắt app giữa chừng không mất
+  let res = null, over = false;
+  if (st.ctx === 'session' && sess) {
+    const d = sess.day, part = PARTS[d.part];
+    res = RATING.rateLesson({ rating: save.rating, index: st.idx, final: L.final, acc, ok: st.ok, times: st.times, stage: L.stage,
+                              ratedCount: save.ratedCount, kMul: part.kMul, gained: d.gained, lost: d.lost });
+    save.rating = res.newRating; save.ratedCount++;
+    d.gained = res.gained; d.lost = res.lost; d.end = save.rating;
+    d.lessons++; d.ok += st.ok; d.bad += st.bad;
+    if (pass && !rec) d.opened.push(L.id);
+    if (part.id === 'new') d.lastNew = L.id;
+    over = d.partSec >= part.seconds;
+  }
   writeSave();
+  updateElo();
   document.querySelectorAll('.next').forEach(e => e.classList.remove('next'));
   document.querySelectorAll('.fg.on').forEach(e => e.classList.remove('on'));
   const next = st.idx + 1 < LESSONS.length ? st.idx + 1 : -1;
   const again = { label: 'Làm lại', fn: () => startLesson(st.idx) };
   const toMap = { label: 'Lộ trình', fn: showMap };
   let main, rest;
-  if (pass) {
+  if (res) {
+    const d = sess.day, last = d.part === PARTS.length - 1;
+    main = { label: over ? (last ? 'Xem tổng kết' : `Sang phần ${PARTS[d.part + 1].name}`) : 'Tiếp tục', fn: nextStep };
+    rest = [];
+  } else if (pass) {
     main = next >= 0 ? { label: 'Bài tiếp theo', fn: () => startLesson(next) } : { label: 'Về lộ trình', fn: showMap };
     rest = [again, ...(next >= 0 ? [toMap] : [])];
   } else { main = again; rest = [toMap]; }
-  document.getElementById('r-title').textContent = pass ? (next >= 0 ? 'Xong bài rồi, giỏi lắm!' : 'Hoàn thành cả lộ trình!') : 'Gần được rồi, mình làm lại nhé!';
+  document.getElementById('r-title').textContent = pass ? (next >= 0 ? 'Xong bài rồi, giỏi lắm!' : 'Hoàn thành cả lộ trình!') : (res ? 'Gần được rồi, lần sau sẽ tốt hơn!' : 'Gần được rồi, mình làm lại nhé!');
   document.getElementById('r-acc').textContent = acc + '%';
   document.getElementById('r-acc').parentNode.className = 'rstat ' + (pass ? 'good' : 'low');
   document.getElementById('r-bad').textContent = st.bad;
   document.getElementById('r-need').textContent = PV.CFG.PASS_ACCURACY + '%';
-  document.getElementById('r-sub').textContent = pass ? (next >= 0 ? `Đã mở: ${LESSONS[next].title}` : '') : `Cần đạt ${PV.CFG.PASS_ACCURACY}% chính xác để sang bài kế.`;
+  const sub = pass ? (next >= 0 ? `Đã mở: ${LESSONS[next].title}` : '') : (res ? `Cần đạt ${PV.CFG.PASS_ACCURACY}% chính xác để mở bài kế.` : `Cần đạt ${PV.CFG.PASS_ACCURACY}% chính xác để sang bài kế.`);
+  document.getElementById('r-sub').textContent = sub;
+  const ptsEl = document.getElementById('r-pts');
+  ptsEl.textContent = '';
+  if (res) {
+    const a = res.applied;
+    ptsEl.className = a > 0 ? 'up' : a < 0 ? 'down' : '';
+    ptsEl.textContent = (a > 0 ? '+' : a < 0 ? '-' : '') + Math.abs(a) + ' điểm';
+    const sm = document.createElement('small');
+    sm.textContent = res.capped ? 'đã chạm mức tối đa của hôm nay' : `tổng ${save.rating}`;
+    ptsEl.append(sm);
+  } else { ptsEl.className = ''; ptsEl.textContent = 'Tập thêm, không tính điểm'; }
   const box = document.getElementById('r-btns');
   box.textContent = '';
   [main, ...rest].forEach((b, i) => {
@@ -523,6 +624,186 @@ function finishLesson() {
   });
   resultAction = main.fn;
   setMode('result');
+}
+
+/* ---------- Điểm ở thanh trên ---------- */
+function pad2(n) { return String(n).padStart(2, '0'); }
+function todayKey() { const d = new Date(); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; }
+const signed = n => (n > 0 ? '+' : n < 0 ? '-' : '') + Math.abs(n);
+function updateElo() {
+  document.getElementById('s-elo').textContent = save.rating;
+  const d = save.days[todayKey()];
+  const ch = d ? save.rating - d.start : 0;
+  const el = document.getElementById('s-elod');
+  el.textContent = d ? signed(ch) : '';
+  el.className = ch > 0 ? 'up' : ch < 0 ? 'down' : '';
+}
+
+/* ---------- Buổi tập 15 phút ---------- */
+const FAST = new URLSearchParams(location.search).get('fast') === '1';   // chỉ để kiểm thử: mỗi phần 15 giây
+const PARTS = RATING.SESSION_PARTS.map(p => Object.assign({}, p, { seconds: FAST ? 15 : p.seconds }));
+const IDLE_MS = 20000;      // không gõ quá 20 giây thì đồng hồ buổi tạm dừng
+let sess = null;            // { key, day } khi đang trong buổi
+let lastKeyAt = 0;          // thời điểm bấm phím gần nhất (performance.now)
+let lastTick = performance.now(), lastSaveAt = 0;
+
+const fmtMin = s => { s = Math.max(0, Math.ceil(s)); return Math.floor(s / 60) + ':' + pad2(s % 60); };
+
+function newDay() {
+  return { start: save.rating, end: save.rating, gained: 0, lost: 0, seconds: 0, lessons: 0, ok: 0, bad: 0, done: false,
+           part: 0, partSec: 0, lastNew: null, opened: [] };
+}
+function todayDay() { const d = save.days[todayKey()]; return d && typeof d === 'object' ? d : null; }
+
+/** Chọn bài cho một phần của buổi. */
+function pickLesson(p) {
+  const passed = LESSONS.map((l, i) => i).filter(i => isPassed(LESSONS[i].id));
+  const todo = firstTodo();
+  const cur = todo >= 0 ? todo : LESSONS.length - 1;       // "bài hiện tại"
+  const rnd = a => a[Math.floor(Math.random() * a.length)];
+  switch (PARTS[p].id) {
+    case 'warm': {
+      if (!passed.length) return cur;
+      const pool = passed.length > 1 ? passed.filter(i => LESSONS[i].id !== sess.lastWarm) : passed;
+      const i = rnd(pool); sess.lastWarm = LESSONS[i].id; return i;
+    }
+    case 'new': return todo >= 0 ? todo : rnd(passed);      // bài chưa qua đầu tiên; qua hết rồi thì ôn bài bất kỳ
+    case 'practice': {                                       // bài vừa học ở phần Bài mới (qua rồi hay chưa đều ôn lại)
+      const k = sess.day.lastNew ? LESSONS.findIndex(l => l.id === sess.day.lastNew) : -1;
+      return k >= 0 ? k : cur;
+    }
+    default: return passed.length ? Math.max(...passed) : cur;   // thử thách: bài đã qua khó nhất
+  }
+}
+
+function startSession() {
+  const key = todayKey();
+  let d = todayDay();
+  if (d && d.done) { showHome(); return; }
+  if (!d) { d = save.days[key] = newDay(); }
+  sess = { key, day: d, lastWarm: null };
+  writeSave();
+  updateElo();
+  nextStep();
+}
+
+/** Sang bài kế của buổi (hoặc phần kế, hoặc tổng kết). */
+function nextStep() {
+  const d = sess.day;
+  while (d.part < PARTS.length && d.partSec >= PARTS[d.part].seconds) { d.part++; d.partSec = 0; }
+  if (d.part >= PARTS.length) { finishSession(); return; }
+  writeSave();
+  startLesson(pickLesson(d.part), { ctx: 'session', lines: PARTS[d.part].lines });
+}
+
+function finishSession() {
+  const d = sess.day;
+  d.done = true; d.end = save.rating;
+  writeSave();
+  sess = null;
+  updateElo();
+  showHome(true);
+}
+
+function leaveSession() { writeSave(); sess = null; showHome(); }
+
+/* Đồng hồ buổi: chạy khi trang đang hiện và bé có gõ trong 20 giây gần nhất; ngừng thì "Tạm dừng". */
+function tick() {
+  const now = performance.now(), dt = Math.min((now - lastTick) / 1000, 1);
+  lastTick = now;
+  if (!sess || st.ctx !== 'session' || (mode !== 'lesson' && mode !== 'result')) return;
+  const d = sess.day, part = PARTS[d.part];
+  const active = mode === 'lesson' && document.visibilityState === 'visible' && now - lastKeyAt <= IDLE_MS;
+  if (active) { d.partSec += dt; d.seconds += dt; }
+  if (now - lastSaveAt > 3000) { lastSaveAt = now; writeSave(); }
+  // Thanh tiến độ
+  const nameEl = document.getElementById('sb-name'), segsEl = document.getElementById('sb-segs'), timeEl = document.getElementById('sb-time');
+  if (!segsEl.children.length) {
+    PARTS.forEach(p => { const s = document.createElement('div'); s.className = 'seg'; s.style.setProperty('--s', p.seconds); s.title = p.name; s.append(document.createElement('i')); segsEl.append(s); });
+  }
+  [...segsEl.children].forEach((s, i) => {
+    s.classList.toggle('cur', i === d.part);
+    s.firstChild.style.setProperty('--p', (i < d.part ? 100 : i === d.part ? Math.min(100, d.partSec * 100 / PARTS[i].seconds) : 0).toFixed(1) + '%');
+  });
+  nameEl.textContent = '';
+  nameEl.append(part.name);
+  const sm = document.createElement('small'); sm.textContent = `${d.part + 1}/${PARTS.length}`; nameEl.append(sm);
+  const rest = part.seconds - d.partSec;
+  timeEl.className = active || mode === 'result' ? '' : 'paused';
+  timeEl.textContent = mode === 'result' ? (rest <= 0 ? 'Hết giờ phần này' : 'Còn ' + fmtMin(rest))
+    : !active ? 'Tạm dừng' : rest <= 0 ? 'Làm nốt bài này' : 'Còn ' + fmtMin(rest);
+}
+setInterval(tick, 250);
+document.addEventListener('visibilitychange', () => { lastTick = performance.now(); if (document.visibilityState === 'hidden') writeSave(); });
+addEventListener('pagehide', () => writeSave());
+
+/* ---------- Trang chủ và tổng kết buổi ---------- */
+const mk = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const homeEl = document.getElementById('home');
+function bigBtn(label, cls, fn, big) {
+  const b = mk('button', 'btn ' + cls + (big ? ' btn-big' : ''), label);
+  b.type = 'button';
+  b.addEventListener('click', () => { b.blur(); fn(); });
+  return b;
+}
+function ratingBlock(d) {
+  const box = mk('div', 'elo-big');
+  box.append(mk('span', '', 'Điểm'));
+  if (d && d.done) {
+    box.append(mk('b', '', `${d.start} → ${d.end}`));
+    const ch = d.end - d.start;
+    box.append(mk('em', ch > 0 ? 'up' : ch < 0 ? 'down' : '', signed(ch)));
+  } else {
+    box.append(mk('b', '', String(save.rating)));
+    const ch = d ? save.rating - d.start : 0;
+    if (d) box.append(mk('em', ch > 0 ? 'up' : ch < 0 ? 'down' : '', signed(ch) + ' hôm nay'));
+  }
+  return box;
+}
+const partsText = () => PARTS.map(p => `${p.name} ${FAST ? p.seconds + ' giây' : Math.round(p.seconds / 60) + ' phút'}`).join(' · ');
+
+function showHome(justFinished) {
+  const d = todayDay();
+  homeEl.textContent = '';
+  document.querySelectorAll('.next').forEach(e => e.classList.remove('next'));
+  document.querySelectorAll('.fg.on').forEach(e => e.classList.remove('on'));
+  st.ctx = 'free';
+  let main;
+  if (d && d.done) {
+    const tot = d.ok + d.bad, acc = tot ? Math.round(d.ok * 100 / tot) : 0, ch = d.end - d.start;
+    homeEl.append(mk('div', 'eyebrow', 'Buổi tập hôm nay'));
+    homeEl.append(mk('h2', '', justFinished ? 'Hết giờ rồi, xong buổi tập!' : 'Hôm nay đã xong buổi tập!'));
+    homeEl.append(ratingBlock(d));
+    const stats = mk('div', 'rstats');
+    [[d.lessons, 'Bài đã làm', ''], [acc + '%', 'Chính xác chung', acc >= PV.CFG.PASS_ACCURACY ? 'good' : 'low'], [Math.max(1, Math.round(d.seconds / 60)), 'Phút tập', '']].forEach(([v, l, c]) => {
+      const t = mk('div', 'rstat ' + c); t.append(mk('b', '', String(v)), mk('span', '', l)); stats.append(t);
+    });
+    homeEl.append(stats);
+    const opened = d.opened.map(id => PV.byId[id]).filter(Boolean).map(l => l.title);
+    homeEl.append(mk('div', 'htext', opened.length ? `Bài mới mở được: ${opened.slice(0, 3).join(', ')}${opened.length > 3 ? ` và ${opened.length - 3} bài nữa` : ''}` : 'Hôm nay chưa mở thêm bài mới.'));
+    homeEl.append(mk('div', 'htext muted', acc >= 95 ? 'Gõ chuẩn quá, gần như không sai phím nào!' : ch > 0 ? 'Điểm đang lên, cứ thế phát huy nhé!' : 'Chậm mà chắc, mai mình tập tiếp nhé!'));
+    const t = firstTodo();
+    const row = mk('div', 'rbtns');
+    main = { fn: () => startLesson(t < 0 ? LESSONS.length - 1 : t) };
+    row.append(bigBtn('Luyện thêm', 'gold', main.fn), bigBtn('Lộ trình', 'purple', showMap));
+    homeEl.append(row, mk('div', 'htext muted', 'Luyện thêm vẫn chấm qua bài nhưng không đổi điểm.'));
+  } else {
+    const resume = !!d;
+    homeEl.append(mk('div', 'eyebrow', 'Buổi tập 15 phút'));
+    homeEl.append(ratingBlock(d));
+    main = { fn: startSession };
+    homeEl.append(bigBtn(resume ? 'Tiếp tục buổi tập' : 'Bắt đầu buổi tập hôm nay', 'gold', main.fn, true));
+    if (resume) {
+      const left = PARTS.reduce((s, p, i) => s + (i < d.part ? 0 : i === d.part ? Math.max(0, p.seconds - d.partSec) : p.seconds), 0);
+      homeEl.append(mk('div', 'htext', `Còn khoảng ${fmtMin(left)} nữa là xong buổi hôm nay.`));
+    } else homeEl.append(mk('div', 'htext', partsText()));
+    const row = mk('div', 'rbtns');
+    row.append(bigBtn('Lộ trình', 'purple', showMap));
+    homeEl.append(row);
+  }
+  resultAction = main.fn;
+  setMode('home');
+  updateElo();
 }
 
 /* ---------- Bản đồ lộ trình ---------- */
@@ -562,9 +843,16 @@ function showMap() {
   }
   document.querySelectorAll('.next').forEach(e => e.classList.remove('next'));
   document.querySelectorAll('.fg.on').forEach(e => e.classList.remove('on'));
+  resultAction = null;
+  st.ctx = 'free';
   setMode('map');
 }
-document.getElementById('btn-map').addEventListener('click', e => { e.currentTarget.blur(); if (mode === 'map') { const t = firstTodo(); startLesson(t < 0 ? st.idx : t); } else showMap(); });
+document.getElementById('btn-map').addEventListener('click', e => {
+  e.currentTarget.blur();
+  if (mode === 'map') showHome();
+  else if (document.body.classList.contains('in-sess')) leaveSession();   // thoát buổi: tiến độ đã lưu, mở lại sẽ tiếp tục
+  else showMap();
+});
 
 /* ---------- Nhận phím từ bàn phím rời ---------- */
 function codeOf(e) {
@@ -580,7 +868,8 @@ addEventListener('keydown', e => {
   warnEl.hidden = !ime;
   diagEl.textContent = `key="${e.key}"  code="${e.code}"`;
   if (ime) return;
-  if (mode === 'result' && e.key === 'Enter' && resultAction) { e.preventDefault(); resultAction(); return; }
+  lastKeyAt = performance.now();
+  if ((mode === 'result' || mode === 'home') && e.key === 'Enter' && resultAction) { e.preventDefault(); if (!e.repeat) resultAction(); return; }
   const code = codeOf(e);
   if (code) keyEls[code].classList.add('down');
   if (e.key.length === 1 || ['Tab', 'Backspace', 'Enter'].includes(e.key)) e.preventDefault();
@@ -598,6 +887,7 @@ kbEl.addEventListener('pointerdown', e => {
   const code = k.dataset.code;
   flash(k, 'down', 120);
   if (mode !== 'lesson') return;
+  lastKeyAt = performance.now();
   const want = curText()[st.pos], t = charMap[want];
   if (code.startsWith('Shift')) return;
   // Chạm đúng phím thì coi như gõ đúng ký tự (kể cả ký tự cần Shift)
@@ -620,7 +910,7 @@ document.addEventListener('fullscreenchange', () => {
   document.getElementById('fs').textContent = document.fullscreenElement ? 'Thoát toàn màn hình' : 'Toàn màn hình';
 });
 
-{ const t = firstTodo(); if (t < 0) { startLesson(LESSONS.length - 1); showMap(); } else startLesson(t); }
+showHome();
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
