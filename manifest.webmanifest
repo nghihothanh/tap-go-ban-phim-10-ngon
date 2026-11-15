@@ -4,8 +4,8 @@
   "description": "Tập gõ bàn phím 10 ngón cho bé, mỗi ngày 15 phút.",
   "lang": "vi",
   "start_url": "/tap-go-ban-phim-10-ngon/",
-  "display": "fullscreen",
-  "orientation": "landscape",
+  "display": "standalone",
+  "orientation": "any",
   "background_color": "#18151A",
   "theme_color": "#18151A",
   "icons": [
