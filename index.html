@@ -192,6 +192,50 @@ main { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-temp
 @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 
+/* ---------- Kết quả bài ---------- */
+#note { font-size: calc(var(--u) * .24); color: var(--muted); text-align: center; }
+#result {
+  position: absolute; inset: 0; z-index: 3; background: var(--surface); display: none;
+  flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * .2); padding: calc(var(--u) * .2);
+}
+#result.show { display: flex; }
+#result h2 { font-size: calc(var(--u) * .5); color: var(--heading); text-align: center; }
+.rstats { display: flex; gap: calc(var(--u) * .3); }
+.rstat { display: flex; flex-direction: column; align-items: center; min-width: calc(var(--u) * 1.9); padding: calc(var(--u) * .12) calc(var(--u) * .2); background: var(--surface-2); border: 1px solid var(--border); border-radius: calc(var(--u) * .24); }
+.rstat b { font-size: calc(var(--u) * .62); color: var(--heading); font-variant-numeric: tabular-nums; }
+.rstat span { font-size: calc(var(--u) * .2); color: var(--muted); }
+.rstat.good b { color: var(--ok); } .rstat.low b { color: var(--bad); }
+#r-sub { font-size: calc(var(--u) * .25); color: var(--text); min-height: 1.3em; text-align: center; }
+.rbtns { display: flex; gap: calc(var(--u) * .24); }
+.rbtns .btn { font-size: calc(var(--u) * .28); padding: calc(var(--u) * .16) calc(var(--u) * .42); }
+
+/* ---------- Bản đồ lộ trình ---------- */
+main { grid-row: 2; grid-column: 1; }
+#kb { grid-row: 3; }
+#map { grid-row: 2; grid-column: 1; display: none; flex-direction: column; gap: calc(var(--u) * .1); min-height: 0; }
+body.map-mode #map { display: flex; }
+body.map-mode main, body.map-mode #kb { display: none; }
+.stage {
+  flex: 1; min-height: 0; display: flex; align-items: center; gap: calc(var(--u) * .24); padding: 0 calc(var(--u) * .28);
+  background: var(--surface); border: 1px solid var(--border); border-radius: calc(var(--u) * .26); box-shadow: var(--shadow);
+}
+.stage.locked { opacity: .55; }
+.snum { flex: none; width: calc(var(--u) * .62); height: calc(var(--u) * .62); border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: calc(var(--u) * .32); }
+.sinfo { flex: none; width: calc(var(--u) * 4.4); display: flex; flex-direction: column; gap: .15em; }
+.sinfo b { font-size: calc(var(--u) * .3); color: var(--heading); white-space: nowrap; }
+.sinfo b em { font-style: normal; font-size: .62em; font-weight: 700; margin-left: .6em; padding: .1em .6em; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); color: var(--purple); }
+.sinfo small { font-size: calc(var(--u) * .19); color: var(--muted); line-height: 1.25; }
+.lessons { flex: 1; display: flex; flex-wrap: wrap; gap: calc(var(--u) * .1); align-content: center; }
+.ls {
+  font: inherit; font-weight: 800; font-size: calc(var(--u) * .22); cursor: pointer; flex: none;
+  min-width: calc(var(--u) * .66); height: calc(var(--u) * .66); padding: 0 .35em; border-radius: 999px;
+  border: 2px dashed var(--border); background: var(--surface-2); color: var(--muted);
+}
+.ls.open { border: 2px solid var(--pur-3); color: var(--heading); background: var(--surface); }
+.ls.done { border: 2px solid var(--gold-deep); color: var(--on-gold); background: linear-gradient(100deg, var(--gold-1) 5%, var(--gold-2) 45%, var(--gold-3) 85%); }
+.ls.now { box-shadow: 0 0 0 calc(var(--u) * .05) var(--pur-3), 0 0 calc(var(--u) * .3) var(--gold-2); animation: pulse 1s ease-in-out infinite; }
+.ls:disabled { cursor: default; }
+
 /* ---------- Nhắc xoay ngang ---------- */
 #rotate { display: none; position: fixed; inset: 0; z-index: 9; background: var(--bg); color: var(--heading); place-items: center; text-align: center; padding: 2em; font-size: 5vw; font-weight: 800; }
 #rotate div { font-size: 18vw; animation: tilt 1.6s ease-in-out infinite; }
@@ -208,26 +252,41 @@ main { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-temp
   <div class="chip ok">Đúng <b id="s-ok">0</b></div>
   <div class="chip bad">Sai <b id="s-bad">0</b></div>
   <div class="chip acc">Chính xác <b id="s-acc">--</b></div>
+  <button class="btn purple" id="btn-map" type="button">Lộ trình</button>
   <button class="btn gold" id="fs" type="button">Toàn màn hình</button>
 </header>
 
 <main>
   <div class="hand" id="hand-l"></div>
   <section class="card">
-    <div class="eyebrow">Gõ thử theo phím đang sáng</div>
+    <div class="eyebrow" id="eyebrow"></div>
     <div id="prompt" aria-live="off"></div>
     <div id="hint"></div>
+    <div id="note" hidden></div>
     <div id="diag">Chưa nhận phím nào</div>
     <div id="warn" hidden>Bàn phím đang bật bộ gõ tiếng Việt. Hãy chuyển sang English (US) để tập.</div>
     <div id="toast" class="gold"></div>
+    <div id="result">
+      <h2 id="r-title"></h2>
+      <div class="rstats">
+        <div class="rstat"><b id="r-acc">--</b><span>Chính xác</span></div>
+        <div class="rstat"><b id="r-bad">0</b><span>Số lỗi</span></div>
+        <div class="rstat"><b id="r-need">90%</b><span>Cần đạt</span></div>
+      </div>
+      <div id="r-sub"></div>
+      <div class="rbtns" id="r-btns"></div>
+    </div>
   </section>
   <div class="hand" id="hand-r"></div>
 </main>
+
+<section id="map" aria-label="Lộ trình"></section>
 
 <div id="kb" aria-hidden="true"></div>
 
 <div id="rotate"><div>&#x1F4F1;</div>Xoay ngang máy tính bảng để bắt đầu nhé!</div>
 
+<script src="lessons.js"></script>
 <script>
 'use strict';
 
@@ -303,24 +362,67 @@ function drawHand(side) {
 }
 drawHand('l'); drawHand('r');
 
-/* ---------- Bài gõ thử của bước 1 ---------- */
-const LINES = ['fff jjj fjf jfj', 'asdf jkl;', 'dad sad; a lad asks', 'The Quick Fox.'];
+/* ---------- Bài học: trạng thái, lưu tiến độ ---------- */
+const SAVE_KEY = 'phimvang.progress';   // một khóa duy nhất cho mọi dữ liệu; bước sau mở rộng thêm trường
+const SAVE_VER = 1;                     // tăng khi đổi cấu trúc dữ liệu lưu hoặc id/thứ tự bài
+// Dạng lưu: { v: 1, passed: { '1-1': { best: 96, tries: 2 } }, last: '1-2' }
+function loadSave() {
+  try {
+    const o = JSON.parse(localStorage.getItem(SAVE_KEY));
+    if (o && o.v === SAVE_VER && o.passed && typeof o.passed === 'object') return o;
+  } catch (_) {}
+  return { v: SAVE_VER, passed: {}, last: null };
+}
+function writeSave() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (_) {} }
+const save = loadSave();
+const LESSONS = PV.lessons;
+const isPassed = id => !!save.passed[id];
+const isOpen = i => i === 0 || isPassed(LESSONS[i - 1].id);
+const firstTodo = () => { const i = LESSONS.findIndex(l => !isPassed(l.id)); return i < 0 ? -1 : i; };
+
 const promptEl = document.getElementById('prompt');
 const hintEl = document.getElementById('hint');
+const noteEl = document.getElementById('note');
+const eyebrowEl = document.getElementById('eyebrow');
 const diagEl = document.getElementById('diag');
 const warnEl = document.getElementById('warn');
 const toastEl = document.getElementById('toast');
+const resultEl = document.getElementById('result');
+const mapEl = document.getElementById('map');
 const PRAISE = ['Giỏi lắm!', 'Tuyệt vời!', 'Chuẩn luôn!', 'Quá đỉnh!'];
-const st = { line: 0, pos: 0, ok: 0, bad: 0 };
+let mode = 'lesson';   // 'lesson' | 'result' | 'map'
+const st = { idx: 0, lines: [], line: 0, pos: 0, ok: 0, bad: 0 };
+const curText = () => st.lines[st.line].text;
+
+function setMode(m) {
+  mode = m;
+  document.body.classList.toggle('map-mode', m === 'map');
+  resultEl.classList.toggle('show', m === 'result');
+  document.getElementById('btn-map').textContent = m === 'map' ? 'Vào bài' : 'Lộ trình';
+}
+
+function startLesson(idx) {
+  const L = LESSONS[idx];
+  st.idx = idx; st.lines = PV.genLines(L); st.line = 0; st.ok = 0; st.bad = 0;
+  save.last = L.id; writeSave();
+  setMode('lesson');
+  stats();
+  loadLine();
+}
 
 function loadLine() {
   promptEl.textContent = '';
-  for (const ch of LINES[st.line]) {
+  for (const ch of curText()) {
     const sp = document.createElement('span');
-    if (ch === ' ') { sp.className = 'sp'; sp.textContent = ' '; } else sp.textContent = ch;
+    if (ch === ' ') { sp.className = 'sp'; sp.textContent = ' '; } else sp.textContent = ch;
     promptEl.append(sp);
   }
   st.pos = 0;
+  const L = LESSONS[st.idx];
+  eyebrowEl.textContent = `Chặng ${L.stage} · ${L.title} · Dòng ${st.line + 1}/${st.lines.length}`;
+  const note = st.lines[st.line].note;
+  noteEl.textContent = note ? `Chữ sẽ ra khi dùng bộ gõ Telex: ${note}` : '';
+  noteEl.hidden = !note;
   showTarget();
 }
 
@@ -331,7 +433,7 @@ function showTarget() {
     sp.classList.toggle('done', i < st.pos);
     sp.classList.toggle('cur', i === st.pos);
   });
-  const ch = LINES[st.line][st.pos];
+  const ch = curText()[st.pos];
   const t = charMap[ch];
   if (!t) return;
   keyEls[t.code].classList.add('next');
@@ -350,11 +452,13 @@ function showTarget() {
   hintEl.querySelector('kbd').textContent = name;
 }
 
+const accNow = () => { const n = st.ok + st.bad; return n ? Math.round(st.ok * 100 / n) : null; };
+
 function stats() {
   document.getElementById('s-ok').textContent = st.ok;
   document.getElementById('s-bad').textContent = st.bad;
-  const n = st.ok + st.bad;
-  document.getElementById('s-acc').textContent = n ? Math.round(st.ok * 100 / n) + '%' : '--';
+  const a = accNow();
+  document.getElementById('s-acc').textContent = a === null ? '--' : a + '%';
 }
 
 function flash(el, cls, ms) {
@@ -364,13 +468,15 @@ function flash(el, cls, ms) {
 }
 
 function typeChar(ch, code) {
-  const want = LINES[st.line][st.pos];
+  if (mode !== 'lesson') return;
+  const want = curText()[st.pos];
   if (ch === want) {
     st.ok++; st.pos++;
-    if (st.pos >= LINES[st.line].length) {
+    if (st.pos >= curText().length) {
+      if (st.line + 1 >= st.lines.length) { stats(); finishLesson(); return; }
       toastEl.textContent = PRAISE[st.line % PRAISE.length];
       flash(toastEl, 'show', 900);
-      st.line = (st.line + 1) % LINES.length;
+      st.line++;
       loadLine();
     } else showTarget();
   } else {
@@ -380,6 +486,85 @@ function typeChar(ch, code) {
   }
   stats();
 }
+
+/* ---------- Kết quả bài ---------- */
+let resultAction = null;   // việc của nút chính, để phím Enter dùng
+function finishLesson() {
+  const L = LESSONS[st.idx], acc = accNow(), pass = acc >= PV.CFG.PASS_ACCURACY;
+  const rec = save.passed[L.id];
+  if (pass) save.passed[L.id] = { best: Math.max(acc, rec ? rec.best : 0), tries: (rec ? rec.tries : 0) + 1 };
+  else if (rec) rec.tries++;
+  writeSave();
+  document.querySelectorAll('.next').forEach(e => e.classList.remove('next'));
+  document.querySelectorAll('.fg.on').forEach(e => e.classList.remove('on'));
+  const next = st.idx + 1 < LESSONS.length ? st.idx + 1 : -1;
+  const again = { label: 'Làm lại', fn: () => startLesson(st.idx) };
+  const toMap = { label: 'Lộ trình', fn: showMap };
+  let main, rest;
+  if (pass) {
+    main = next >= 0 ? { label: 'Bài tiếp theo', fn: () => startLesson(next) } : { label: 'Về lộ trình', fn: showMap };
+    rest = [again, ...(next >= 0 ? [toMap] : [])];
+  } else { main = again; rest = [toMap]; }
+  document.getElementById('r-title').textContent = pass ? (next >= 0 ? 'Xong bài rồi, giỏi lắm!' : 'Hoàn thành cả lộ trình!') : 'Gần được rồi, mình làm lại nhé!';
+  document.getElementById('r-acc').textContent = acc + '%';
+  document.getElementById('r-acc').parentNode.className = 'rstat ' + (pass ? 'good' : 'low');
+  document.getElementById('r-bad').textContent = st.bad;
+  document.getElementById('r-need').textContent = PV.CFG.PASS_ACCURACY + '%';
+  document.getElementById('r-sub').textContent = pass ? (next >= 0 ? `Đã mở: ${LESSONS[next].title}` : '') : `Cần đạt ${PV.CFG.PASS_ACCURACY}% chính xác để sang bài kế.`;
+  const box = document.getElementById('r-btns');
+  box.textContent = '';
+  [main, ...rest].forEach((b, i) => {
+    const el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'btn ' + (i === 0 ? 'gold' : 'purple');
+    el.textContent = b.label;
+    el.addEventListener('click', () => { el.blur(); b.fn(); });
+    box.append(el);
+  });
+  resultAction = main.fn;
+  setMode('result');
+}
+
+/* ---------- Bản đồ lộ trình ---------- */
+function showMap() {
+  const todo = firstTodo();
+  mapEl.textContent = '';
+  for (const S of PV.STAGES) {
+    const idxs = LESSONS.map((l, i) => i).filter(i => LESSONS[i].stage === S.id);
+    const open = isOpen(idxs[0]);
+    const doneN = idxs.filter(i => isPassed(LESSONS[i].id)).length;
+    const row = document.createElement('div');
+    row.className = 'stage' + (open ? '' : ' locked');
+    const num = document.createElement('div');
+    num.className = 'snum ' + (doneN === idxs.length ? 'gold' : 'purple');
+    num.textContent = S.id;
+    const info = document.createElement('div');
+    info.className = 'sinfo';
+    const b = document.createElement('b'); b.textContent = S.title;
+    if (S.optional) { const t = document.createElement('em'); t.textContent = 'Tùy chọn'; b.append(t); }
+    const sm = document.createElement('small'); sm.textContent = `${S.sub}  (${doneN}/${idxs.length})`;
+    info.append(b, sm);
+    const ls = document.createElement('div');
+    ls.className = 'lessons';
+    for (const i of idxs) {
+      const L = LESSONS[i], btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'ls' + (isPassed(L.id) ? ' done' : isOpen(i) ? ' open' : '') + (i === todo ? ' now' : '');
+      btn.textContent = isPassed(L.id) ? '✓' : (L.final ? 'Ôn' : L.n);
+      btn.title = `${L.title}`;
+      btn.setAttribute('aria-label', `Chặng ${S.id}, bài ${L.n}: ${L.title}`);
+      btn.disabled = !isOpen(i);
+      btn.addEventListener('click', () => startLesson(i));
+      ls.append(btn);
+    }
+    row.append(num, info, ls);
+    mapEl.append(row);
+  }
+  document.querySelectorAll('.next').forEach(e => e.classList.remove('next'));
+  document.querySelectorAll('.fg.on').forEach(e => e.classList.remove('on'));
+  setMode('map');
+}
+document.getElementById('btn-map').addEventListener('click', e => { e.currentTarget.blur(); if (mode === 'map') { const t = firstTodo(); startLesson(t < 0 ? st.idx : t); } else showMap(); });
 
 /* ---------- Nhận phím từ bàn phím rời ---------- */
 function codeOf(e) {
@@ -395,11 +580,12 @@ addEventListener('keydown', e => {
   warnEl.hidden = !ime;
   diagEl.textContent = `key="${e.key}"  code="${e.code}"`;
   if (ime) return;
+  if (mode === 'result' && e.key === 'Enter' && resultAction) { e.preventDefault(); resultAction(); return; }
   const code = codeOf(e);
   if (code) keyEls[code].classList.add('down');
   if (e.key.length === 1 || ['Tab', 'Backspace', 'Enter'].includes(e.key)) e.preventDefault();
   if (e.repeat) return;
-  if (e.key.length === 1) typeChar(e.key, code);
+  if (e.key.length === 1 && mode === 'lesson') typeChar(e.key, code);
 });
 addEventListener('keyup', e => { const c = codeOf(e); if (c) keyEls[c].classList.remove('down'); });
 addEventListener('blur', () => document.querySelectorAll('.key.down').forEach(k => k.classList.remove('down')));
@@ -411,7 +597,8 @@ kbEl.addEventListener('pointerdown', e => {
   e.preventDefault();
   const code = k.dataset.code;
   flash(k, 'down', 120);
-  const want = LINES[st.line][st.pos], t = charMap[want];
+  if (mode !== 'lesson') return;
+  const want = curText()[st.pos], t = charMap[want];
   if (code.startsWith('Shift')) return;
   // Chạm đúng phím thì coi như gõ đúng ký tự (kể cả ký tự cần Shift)
   if (t && t.code === code) typeChar(want, code);
@@ -433,8 +620,7 @@ document.addEventListener('fullscreenchange', () => {
   document.getElementById('fs').textContent = document.fullscreenElement ? 'Thoát toàn màn hình' : 'Toàn màn hình';
 });
 
-loadLine();
-stats();
+{ const t = firstTodo(); if (t < 0) { startLesson(LESSONS.length - 1); showMap(); } else startLesson(t); }
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
