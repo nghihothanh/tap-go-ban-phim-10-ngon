@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F4F1F6">
+<title>Phím Vàng - Tập gõ 10 ngón</title>
+<style>
+/* ---------- Bảng màu (lấy từ thư mục Colour Theme) ----------
+   Sáng: nền và chữ theo Luxury Purple Light, nút và phím đích theo Technology Gold Light.
+   Tối:  nền và chữ theo Luxury Purple Dark,  nút và phím đích theo Technology Gold Dark. */
+:root {
+  --bg: #F4F1F6;
+  --bg-img: url("img/bg-light.webp");
+  --surface: #FFFFFF;
+  --surface-2: #F9F7FB;
+  --border: #DDD6E3;
+  --heading: #0D0B10;
+  --text: #3B3740;
+  --muted: #7A7482;
+  --gold-1: #B99743;
+  --gold-2: #E8D58C;
+  --gold-3: #C5A34A;
+  --gold-deep: #8A6A1F;
+  --on-gold: #202124;
+  --pur-1: #6A4A8E;
+  --pur-2: #D2C0E8;
+  --pur-3: #8B68B3;
+  --on-purple: #0D0B10;
+  --purple: #5B3A78;
+  --ok: #2E9E5B;
+  --bad: #D93F4C;
+  --key-text: #0D0B10;
+  --key-mix: 26%;
+  --shadow: 0 1px 0 rgba(13, 11, 16, .10), 0 6px 18px rgba(91, 58, 120, .12);
+
+  /* Màu từng ngón tay */
+  --f-lp: #E5484D; --f-lr: #F08C2E; --f-lm: #D9B11F; --f-li: #3FAE6A;
+  --f-ri: #2FA7B8; --f-rm: #3B82E0; --f-rr: #7C5CE0; --f-rp: #D452A8;
+  --f-th: #9A9AA0;
+
+  --u: min(6.2vw, 9.2dvh);     /* một đơn vị phím */
+  --gap: calc(var(--u) * .09);
+}
+:root[data-theme="dark"] {
+  --bg: #18151A;
+  --bg-img: url("img/bg-dark.webp");
+  --surface: #221E25;
+  --surface-2: #2A2530;
+  --border: #7A5C99;
+  --heading: #DCD0E8;
+  --text: #CDC8D2;
+  --muted: #9C94A6;
+  --gold-1: #D2AC47;
+  --gold-2: #F7EF8A;
+  --gold-3: #C5A34A;
+  --gold-deep: #F4E883;
+  --on-gold: #0D0D09;
+  --purple: #B9A0D6;
+  --ok: #5FD08C;
+  --bad: #FF6B78;
+  --key-text: #F4EEFA;
+  --key-mix: 34%;
+  --shadow: 0 1px 0 rgba(0, 0, 0, .5), 0 8px 22px rgba(0, 0, 0, .40);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+  color: var(--text);
+  background: var(--bg-img) center / cover no-repeat, var(--bg);
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
+  gap: calc(var(--u) * .16);
+  padding: calc(var(--u) * .18) calc(var(--u) * .3) calc(var(--u) * .22);
+  padding-left: max(calc(var(--u) * .3), env(safe-area-inset-left));
+  padding-right: max(calc(var(--u) * .3), env(safe-area-inset-right));
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.purple { background: linear-gradient(100deg, var(--pur-1) 5%, var(--pur-2) 45%, var(--pur-3) 85%); color: var(--on-purple); }
+.gold { background: linear-gradient(100deg, var(--gold-1) 5%, var(--gold-2) 45%, var(--gold-3) 85%); color: var(--on-gold); }
+
+/* ---------- Thanh trên ---------- */
+header { display: flex; align-items: center; gap: calc(var(--u) * .22); min-height: calc(var(--u) * .72); }
+.logo {
+  width: calc(var(--u) * .66); height: calc(var(--u) * .66); border-radius: 26%;
+  display: grid; place-items: center; font-weight: 800; font-size: calc(var(--u) * .36);
+  box-shadow: var(--shadow), inset 0 -3px 0 rgba(0, 0, 0, .14);
+}
+h1 { font-size: calc(var(--u) * .36); color: var(--heading); font-weight: 800; letter-spacing: -.01em; white-space: nowrap; }
+h1 small { font-size: .62em; font-weight: 600; color: var(--purple); margin-left: .5em; }
+.spacer { flex: 1; }
+.chip {
+  display: flex; align-items: baseline; gap: .4em; white-space: nowrap;
+  padding: calc(var(--u) * .1) calc(var(--u) * .22);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+  font-size: calc(var(--u) * .22); color: var(--muted);
+}
+.chip b { font-size: 1.3em; color: var(--heading); font-variant-numeric: tabular-nums; min-width: 1.4em; text-align: right; }
+.chip.ok b { color: var(--ok); } .chip.bad b { color: var(--bad); } .chip.acc b { color: var(--purple); }
+button.btn {
+  font: inherit; font-weight: 700; font-size: calc(var(--u) * .23); border: 0; cursor: pointer;
+  padding: calc(var(--u) * .14) calc(var(--u) * .28); border-radius: 999px;
+  box-shadow: var(--shadow);
+}
+button.btn:active { transform: translateY(1px); }
+
+/* ---------- Khu vực giữa: tay trái | bài gõ | tay phải ---------- */
+main { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: minmax(0, 1fr); gap: calc(var(--u) * .2); min-height: 0; }
+.hand { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 0; width: calc(var(--u) * 2.5); }
+.hand svg { width: 100%; height: auto; max-height: calc(100% - 1.6em); }
+.hand span { font-size: calc(var(--u) * .2); font-weight: 700; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+.hand .palm { fill: var(--surface-2); stroke: var(--border); stroke-width: 2; }
+.hand .fg { fill: color-mix(in srgb, var(--c) 30%, var(--surface)); stroke: var(--c); stroke-width: 2; }
+.hand .fg.on { fill: var(--c); animation: pulse 1s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: calc(var(--u) * .32);
+  box-shadow: var(--shadow); min-height: 0; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: calc(var(--u) * .16); padding: calc(var(--u) * .2) calc(var(--u) * .3);
+}
+.card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: linear-gradient(90deg, var(--gold-1), var(--gold-2) 30%, var(--pur-2) 60%, var(--pur-1)); }
+.eyebrow { font-size: calc(var(--u) * .2); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--purple); }
+#prompt {
+  font-family: ui-monospace, "Roboto Mono", "Cascadia Mono", Consolas, "Droid Sans Mono", monospace;
+  font-size: calc(var(--u) * .62); font-weight: 600; line-height: 1.35; color: var(--muted);
+  white-space: pre-wrap; text-align: center;
+}
+#prompt span { display: inline-block; min-width: .62em; border-radius: .14em; padding: 0 .04em; border-bottom: .09em solid transparent; }
+#prompt .done { color: var(--ok); }
+#prompt .cur { color: var(--on-gold); background: linear-gradient(100deg, var(--gold-1) 5%, var(--gold-2) 45%, var(--gold-3) 85%); border-bottom-color: var(--purple); }
+#prompt .sp:not(.cur):not(.done) { border-bottom-color: var(--border); }
+#prompt .sp.done { border-bottom-color: color-mix(in srgb, var(--ok) 45%, transparent); }
+#prompt .cur.miss { background: var(--bad); color: #fff; animation: shake .25s; }
+#hint { font-size: calc(var(--u) * .27); color: var(--text); min-height: 1.4em; text-align: center; }
+#hint kbd {
+  font: inherit; font-weight: 800; color: var(--on-gold); padding: .05em .5em; border-radius: .35em;
+  background: linear-gradient(100deg, var(--gold-1) 5%, var(--gold-2) 45%, var(--gold-3) 85%);
+}
+#hint em { font-style: normal; font-weight: 800; color: var(--fc, var(--purple)); }
+#diag { position: absolute; right: calc(var(--u) * .2); bottom: calc(var(--u) * .1); font-size: calc(var(--u) * .17); color: var(--muted); font-family: ui-monospace, monospace; opacity: .8; }
+#warn { position: absolute; left: 0; right: 0; bottom: 0; padding: .5em 1em; font-size: calc(var(--u) * .21); font-weight: 600; text-align: center; background: var(--bad); color: #fff; }
+#toast {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(.6); opacity: 0; pointer-events: none;
+  font-size: calc(var(--u) * .6); font-weight: 800; padding: .25em .9em; border-radius: 999px; box-shadow: var(--shadow);
+  transition: transform .25s cubic-bezier(.2, 1.6, .4, 1), opacity .2s;
+}
+#toast.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+
+/* ---------- Bàn phím ảo ---------- */
+#kb { display: flex; flex-direction: column; gap: var(--gap); align-items: center; }
+.row { display: flex; gap: var(--gap); }
+.key {
+  --c: var(--f-th);
+  width: calc(var(--u) * var(--w, 1) - var(--gap)); height: calc(var(--u) - var(--gap));
+  border-radius: calc(var(--u) * .16);
+  background: color-mix(in srgb, var(--c) var(--key-mix), var(--surface));
+  border: 1px solid color-mix(in srgb, var(--c) 55%, var(--surface));
+  border-bottom-width: calc(var(--u) * .06);
+  color: var(--key-text); font-weight: 700; font-size: calc(var(--u) * .34);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;
+  position: relative; transition: transform .06s;
+}
+.key i { font-style: normal; font-size: .62em; opacity: .65; margin-bottom: .12em; }
+.key.wide { font-size: calc(var(--u) * .2); letter-spacing: .02em; }
+.key.home::after { content: ""; position: absolute; bottom: 12%; width: 26%; height: calc(var(--u) * .045); border-radius: 9px; background: currentColor; opacity: .55; }
+.key.next {
+  background: linear-gradient(100deg, var(--gold-1) 5%, var(--gold-2) 45%, var(--gold-3) 85%);
+  border-color: var(--gold-deep); color: var(--on-gold); z-index: 1;
+  box-shadow: 0 0 0 calc(var(--u) * .05) var(--pur-3), 0 0 calc(var(--u) * .4) var(--gold-2);
+  animation: pulse 1s ease-in-out infinite;
+}
+.key.down { transform: translateY(calc(var(--u) * .05)); border-bottom-width: 1px; background: color-mix(in srgb, var(--c) 70%, var(--surface)); }
+.key.wrong { background: var(--bad) !important; color: #fff; animation: shake .25s; }
+[data-f="lp"] { --c: var(--f-lp); } [data-f="lr"] { --c: var(--f-lr); } [data-f="lm"] { --c: var(--f-lm); } [data-f="li"] { --c: var(--f-li); }
+[data-f="ri"] { --c: var(--f-ri); } [data-f="rm"] { --c: var(--f-rm); } [data-f="rr"] { --c: var(--f-rr); } [data-f="rp"] { --c: var(--f-rp); }
+[data-f="lt"], [data-f="rt"] { --c: var(--f-th); }
+
+@keyframes pulse { 50% { transform: scale(1.07); } }
+@keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* ---------- Nhắc xoay ngang ---------- */
+#rotate { display: none; position: fixed; inset: 0; z-index: 9; background: var(--bg); color: var(--heading); place-items: center; text-align: center; padding: 2em; font-size: 5vw; font-weight: 800; }
+#rotate div { font-size: 18vw; animation: tilt 1.6s ease-in-out infinite; }
+@keyframes tilt { 50% { transform: rotate(90deg); } }
+@media (orientation: portrait) { #rotate { display: grid; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo gold">F</div>
+  <h1>Phím Vàng<small>Tập gõ 10 ngón</small></h1>
+  <div class="spacer"></div>
+  <div class="chip ok">Đúng <b id="s-ok">0</b></div>
+  <div class="chip bad">Sai <b id="s-bad">0</b></div>
+  <div class="chip acc">Chính xác <b id="s-acc">--</b></div>
+  <button class="btn purple" id="fs" type="button">Toàn màn hình</button>
+</header>
+
+<main>
+  <div class="hand" id="hand-l"></div>
+  <section class="card">
+    <div class="eyebrow">Gõ thử theo phím đang sáng</div>
+    <div id="prompt" aria-live="off"></div>
+    <div id="hint"></div>
+    <div id="diag">Chưa nhận phím nào</div>
+    <div id="warn" hidden>Bàn phím đang bật bộ gõ tiếng Việt. Hãy chuyển sang English (US) để tập.</div>
+    <div id="toast" class="gold"></div>
+  </section>
+  <div class="hand" id="hand-r"></div>
+</main>
+
+<div id="kb" aria-hidden="true"></div>
+
+<div id="rotate"><div>&#x1F4F1;</div>Xoay ngang máy tính bảng để bắt đầu nhé!</div>
+
+<script>
+'use strict';
+
+/* ---------- Giao diện theo hệ thống ---------- */
+(function () {
+  const mq = matchMedia('(prefers-color-scheme: dark)');
+  const forced = new URLSearchParams(location.search).get('theme'); // chỉ dùng để kiểm thử
+  const apply = () => {
+    const dark = forced ? forced === 'dark' : mq.matches;
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    document.querySelector('meta[name=theme-color]').content = dark ? '#18151A' : '#F4F1F6';
+  };
+  mq.addEventListener('change', apply);
+  apply();
+})();
+
+/* ---------- Dữ liệu bàn phím: [code, nhãn, nhãn khi giữ Shift, ngón, độ rộng] ---------- */
+const ROWS = [
+  [['Backquote','`','~','lp'],['Digit1','1','!','lp'],['Digit2','2','@','lr'],['Digit3','3','#','lm'],['Digit4','4','$','li'],['Digit5','5','%','li'],
+   ['Digit6','6','^','ri'],['Digit7','7','&','ri'],['Digit8','8','*','rm'],['Digit9','9','(','rr'],['Digit0','0',')','rp'],['Minus','-','_','rp'],['Equal','=','+','rp'],['Backspace','Xóa',null,'rp',2]],
+  [['Tab','Tab',null,'lp',1.5],['KeyQ','q','Q','lp'],['KeyW','w','W','lr'],['KeyE','e','E','lm'],['KeyR','r','R','li'],['KeyT','t','T','li'],
+   ['KeyY','y','Y','ri'],['KeyU','u','U','ri'],['KeyI','i','I','rm'],['KeyO','o','O','rr'],['KeyP','p','P','rp'],['BracketLeft','[','{','rp'],['BracketRight',']','}','rp'],['Backslash','\\','|','rp',1.5]],
+  [['CapsLock','Caps',null,'lp',1.75],['KeyA','a','A','lp'],['KeyS','s','S','lr'],['KeyD','d','D','lm'],['KeyF','f','F','li'],['KeyG','g','G','li'],
+   ['KeyH','h','H','ri'],['KeyJ','j','J','ri'],['KeyK','k','K','rm'],['KeyL','l','L','rr'],['Semicolon',';',':','rp'],['Quote',"'",'"','rp'],['Enter','Enter',null,'rp',2.25]],
+  [['ShiftLeft','Shift',null,'lp',2.25],['KeyZ','z','Z','lp'],['KeyX','x','X','lr'],['KeyC','c','C','lm'],['KeyV','v','V','li'],['KeyB','b','B','li'],
+   ['KeyN','n','N','ri'],['KeyM','m','M','ri'],['Comma',',','<','rm'],['Period','.','>','rr'],['Slash','/','?','rp'],['ShiftRight','Shift',null,'rp',2.75]],
+  [['Space','','', 'rt', 6.5]],
+];
+const FINGER_NAME = {
+  lp: 'ngón út trái', lr: 'ngón áp út trái', lm: 'ngón giữa trái', li: 'ngón trỏ trái', lt: 'ngón cái',
+  rp: 'ngón út phải', rr: 'ngón áp út phải', rm: 'ngón giữa phải', ri: 'ngón trỏ phải', rt: 'ngón cái',
+};
+
+const kbEl = document.getElementById('kb');
+const keyEls = {};          // code -> phần tử phím
+const charMap = {};         // ký tự -> {code, shift, finger}
+
+for (const row of ROWS) {
+  const r = document.createElement('div');
+  r.className = 'row';
+  for (const [code, lab, shiftLab, finger, w] of row) {
+    const k = document.createElement('div');
+    k.className = 'key';
+    k.dataset.code = code;
+    k.dataset.f = finger;
+    if (w) k.style.setProperty('--w', w);
+    const isLetter = code.startsWith('Key');
+    if (isLetter) k.textContent = shiftLab;
+    else if (shiftLab) k.innerHTML = '<i></i>', k.firstChild.textContent = shiftLab, k.append(lab);
+    else { k.textContent = lab; if (lab) k.classList.add('wide'); }
+    if (code === 'KeyF' || code === 'KeyJ') k.classList.add('home');
+    r.append(k);
+    keyEls[code] = k;
+    if (shiftLab !== null && code !== 'Space') {
+      charMap[lab] = { code, shift: false, finger };
+      charMap[shiftLab] = { code, shift: true, finger };
+    }
+  }
+  kbEl.append(r);
+}
+charMap[' '] = { code: 'Space', shift: false, finger: 'rt' };
+
+/* ---------- Hai bàn tay ---------- */
+function drawHand(side) {
+  // Vẽ tay trái nhìn từ trên xuống; tay phải là ảnh lật gương.
+  const F = [['p', 12, 74], ['r', 48, 44], ['m', 84, 28], ['i', 120, 46]];
+  let s = `<svg viewBox="0 0 200 215" ${side === 'r' ? 'style="transform:scaleX(-1)"' : ''}>`;
+  s += `<rect class="fg" data-f="${side}t" x="146" y="96" width="32" height="84" rx="16" transform="rotate(-32 162 180)"/>`;
+  s += `<rect class="palm" x="8" y="118" width="150" height="90" rx="38"/>`;
+  for (const [f, x, y] of F) s += `<rect class="fg" data-f="${side}${f}" x="${x}" y="${y}" width="30" height="${150 - y}" rx="15"/>`;
+  s += `</svg><span>${side === 'l' ? 'Tay trái' : 'Tay phải'}</span>`;
+  document.getElementById('hand-' + side).innerHTML = s;
+}
+drawHand('l'); drawHand('r');
+
+/* ---------- Bài gõ thử của bước 1 ---------- */
+const LINES = ['fff jjj fjf jfj', 'asdf jkl;', 'dad sad; a lad asks', 'The Quick Fox.'];
+const promptEl = document.getElementById('prompt');
+const hintEl = document.getElementById('hint');
+const diagEl = document.getElementById('diag');
+const warnEl = document.getElementById('warn');
+const toastEl = document.getElementById('toast');
+const PRAISE = ['Giỏi lắm!', 'Tuyệt vời!', 'Chuẩn luôn!', 'Quá đỉnh!'];
+const st = { line: 0, pos: 0, ok: 0, bad: 0 };
+
+function loadLine() {
+  promptEl.textContent = '';
+  for (const ch of LINES[st.line]) {
+    const sp = document.createElement('span');
+    if (ch === ' ') { sp.className = 'sp'; sp.textContent = ' '; } else sp.textContent = ch;
+    promptEl.append(sp);
+  }
+  st.pos = 0;
+  showTarget();
+}
+
+function showTarget() {
+  document.querySelectorAll('.next').forEach(e => e.classList.remove('next'));
+  document.querySelectorAll('.fg.on').forEach(e => e.classList.remove('on'));
+  [...promptEl.children].forEach((sp, i) => {
+    sp.classList.toggle('done', i < st.pos);
+    sp.classList.toggle('cur', i === st.pos);
+  });
+  const ch = LINES[st.line][st.pos];
+  const t = charMap[ch];
+  if (!t) return;
+  keyEls[t.code].classList.add('next');
+  const fingers = ch === ' ' ? ['lt', 'rt'] : [t.finger];
+  let shiftTxt = '';
+  if (t.shift) { // giữ Shift bằng ngón út của tay bên kia
+    const sh = t.finger[0] === 'l' ? 'ShiftRight' : 'ShiftLeft';
+    keyEls[sh].classList.add('next');
+    fingers.push(sh === 'ShiftLeft' ? 'lp' : 'rp');
+    shiftTxt = ` (giữ <kbd>Shift</kbd> bằng ${FINGER_NAME[sh === 'ShiftLeft' ? 'lp' : 'rp']})`;
+  }
+  for (const f of fingers) document.querySelector(`.fg[data-f="${f}"]`).classList.add('on');
+  const name = ch === ' ' ? 'Dấu cách' : ch.toUpperCase();
+  hintEl.style.setProperty('--fc', `var(--f-${ch === ' ' ? 'th' : t.finger})`);
+  hintEl.innerHTML = `Gõ <kbd></kbd> bằng <em>${FINGER_NAME[t.finger]}</em>${shiftTxt}`;
+  hintEl.querySelector('kbd').textContent = name;
+}
+
+function stats() {
+  document.getElementById('s-ok').textContent = st.ok;
+  document.getElementById('s-bad').textContent = st.bad;
+  const n = st.ok + st.bad;
+  document.getElementById('s-acc').textContent = n ? Math.round(st.ok * 100 / n) + '%' : '--';
+}
+
+function flash(el, cls, ms) {
+  if (!el) return;
+  el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls);
+  setTimeout(() => el.classList.remove(cls), ms);
+}
+
+function typeChar(ch, code) {
+  const want = LINES[st.line][st.pos];
+  if (ch === want) {
+    st.ok++; st.pos++;
+    if (st.pos >= LINES[st.line].length) {
+      toastEl.textContent = PRAISE[st.line % PRAISE.length];
+      flash(toastEl, 'show', 900);
+      st.line = (st.line + 1) % LINES.length;
+      loadLine();
+    } else showTarget();
+  } else {
+    st.bad++;
+    flash(promptEl.children[st.pos], 'miss', 260);
+    flash(keyEls[code], 'wrong', 260);
+  }
+  stats();
+}
+
+/* ---------- Nhận phím từ bàn phím rời ---------- */
+function codeOf(e) {
+  if (e.code && keyEls[e.code]) return e.code;
+  const m = charMap[e.key];              // một số bàn phím bluetooth không gửi e.code
+  if (m) return m.code;
+  return keyEls[e.key] ? e.key : null;   // Enter, Tab, Backspace...
+}
+
+addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const ime = e.isComposing || e.keyCode === 229 || e.key === 'Unidentified' || e.key === 'Process';
+  warnEl.hidden = !ime;
+  diagEl.textContent = `key="${e.key}"  code="${e.code}"`;
+  if (ime) return;
+  const code = codeOf(e);
+  if (code) keyEls[code].classList.add('down');
+  if (e.key.length === 1 || ['Tab', 'Backspace', 'Enter'].includes(e.key)) e.preventDefault();
+  if (e.repeat) return;
+  if (e.key.length === 1) typeChar(e.key, code);
+});
+addEventListener('keyup', e => { const c = codeOf(e); if (c) keyEls[c].classList.remove('down'); });
+addEventListener('blur', () => document.querySelectorAll('.key.down').forEach(k => k.classList.remove('down')));
+
+/* Chạm vào phím ảo cũng tính, để thử khi chưa nối bàn phím */
+kbEl.addEventListener('pointerdown', e => {
+  const k = e.target.closest('.key');
+  if (!k) return;
+  e.preventDefault();
+  const code = k.dataset.code;
+  flash(k, 'down', 120);
+  const want = LINES[st.line][st.pos], t = charMap[want];
+  if (code.startsWith('Shift')) return;
+  // Chạm đúng phím thì coi như gõ đúng ký tự (kể cả ký tự cần Shift)
+  if (t && t.code === code) typeChar(want, code);
+  else { const hit = Object.keys(charMap).find(c => charMap[c].code === code && !charMap[c].shift); if (hit) typeChar(hit, code); }
+});
+
+/* ---------- Toàn màn hình + khóa ngang ---------- */
+document.getElementById('fs').addEventListener('click', async e => {
+  e.currentTarget.blur();
+  try {
+    if (document.fullscreenElement) await document.exitFullscreen();
+    else {
+      await document.documentElement.requestFullscreen();
+      if (screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape').catch(() => {});
+    }
+  } catch (_) {}
+});
+document.addEventListener('fullscreenchange', () => {
+  document.getElementById('fs').textContent = document.fullscreenElement ? 'Thoát toàn màn hình' : 'Toàn màn hình';
+});
+
+loadLine();
+stats();
+</script>
+</body>
+</html>
