@@ -67,8 +67,8 @@ const PV = (() => {
           sentences: ['the sun is hot', 'i like milk', 'a cat can run', 'we love our home', 'the fish can swim',
                       'my dog is big', 'look at the moon', 'i see a star', 'it is a red hat', 'we play a game'] },
         { title: 'Ôn từ và câu', kind: 'sentences', final: true,
-          sentences: ['em di hoc ve nha', 'the cat and the dog', 'ba me yeu em', 'i like blue and red', 'meo an ca',
-                      'we go to school', 'con cho chay nhanh', 'my home is nice', 'ca nha cung vui', 'the sun is up'] },
+          sentences: ['Em di hoc ve nha.', 'The cat and the dog.', 'Ba me yeu em!', 'I like blue and red.', 'Meo an ca.',
+                      'We go to school.', 'Con cho chay nhanh!', 'Is my home nice?', 'Ca nha cung vui.', 'The sun is up!'] },
       ] },
     { id: 7, title: 'Telex tiếng Việt', sub: 'Tùy chọn, làm khi đã quen tay', optional: true,
       // Gõ đúng chuỗi phím Telex (không bật bộ gõ). Dòng ghi chú cho biết chữ sẽ ra khi dùng bộ gõ thật.
